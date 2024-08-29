@@ -6,33 +6,9 @@ import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
 import { getAllBarbers } from "@/api/barbeiro/getAllBarbers";
+import BarberInfo from "@/components/Barber/BarberInfo/BarberInfo";
+import { Barbeiro } from "@/interfaces/Barbeiro";
 
-interface Barbeiro {
-  idBarber: string;
-  name: string;
-  email: string;
-  cpf: string;
-  address: Address;
-  salary: number;
-  admissionDate	: string;
-  cargaHoraria: number;
-  services: Service[];
-}
-interface Service{
-  id: string;
-  name: string;
-  description: string;
-  time: number;
-  value: number;
-}
-interface Address{
-  idAddress: string;
-  street: string;
-  number: number;
-  neighborhood: string;
-  city: string;
-  state: string;
-}
 const ListaBarbeiros = () => {
   const [barbeiros, setBarbeiros] = useState<Barbeiro[]>([]);
   const [selectedBarbeiro, setSelectedBarbeiro] = useState<Barbeiro | null>(null);
@@ -45,9 +21,10 @@ const ListaBarbeiros = () => {
     onSuccess: (res) => {
       setBarbeiros(res.data.content);
       setTotalPages(res.data.totalPages);
+      console.log(res.data.content);
     },
     onError: (error) => {
-      console.error('Erro ao recuperar as promoções:', error);
+      console.error('Erro ao recuperar os barbeiros:', error);
     }
   });
 
@@ -67,16 +44,16 @@ const ListaBarbeiros = () => {
     setSelectedBarbeiro(null);
   };
 
-  //if (selectedBarbeiro) {
- //   return <DetalhamentoPromocao
-  //    diretorioAtual="dirAtual"
-  //    promocao={selectedPromocao}
-  //    backDetalhamento={handleBackToList}
-  //    dirAnt="dirAnt"
-  //    hrefAnterior={APP_ROUTES.private.home.name}
-  //    hrefAtual={APP_ROUTES.private.promocoes.name}
-  //  />
-  //}
+  if (selectedBarbeiro) {
+    return <BarberInfo
+      diretorioAtual="dirAtual"
+      barbeiro={selectedBarbeiro}
+      backDetalhamento={handleBackToList}
+      dirAnt="dirAnt"
+      hrefAnterior={APP_ROUTES.private.home.name}
+      hrefAtual={APP_ROUTES.private.promocoes.name}
+    />
+  }
 
   return (
     <div>
