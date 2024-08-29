@@ -1,48 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Formik } from "formik";
 import styles from "./BarberInfo.module.scss";
 import { APP_ROUTES } from "@/constants/app-routes";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
 import { useRouter } from "next/navigation";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { putBarbeiroById } from "@/api/barbeiro/putBarbeiroById";
+import { getAddressById } from "@/api/endereco/getAddressById";
 import BarberInput from "../BarberInput";
 
-interface BarberInfoValues {
-  id: string;
-  nome: string;
-  telefone: string;
+interface Barbeiro {
+  idBarber: string;
+  name: string;
   email: string;
   cpf: string;
+  address: number | Address; // Pode ser o ID ou o objeto completo
+  salary: number;
+  admissionDate: string;
+  workload: number;
+  services: Service[];
+}
+
+interface Address {
+  idAddress: string;
+  street: string;
+  number: number;
+  neighborhood: string;
+  city: string;
+  state: string;
   cep: string;
-  rua: string;
-  numero: number;
-  complemento: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  salario: number;
-  dataAdmissao: string;
-  tipoServico: string;
-  cargaHoraria: number;
+}
+
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  time: number;
+  value: number;
 }
 
 interface BarberInfoProps {
   hrefAnterior: string;
-  diretorioAtual: string;
-  dirAnt: string;
-  hrefAtual: string;
   backDetalhamento: () => void;
-  barbeiro: BarberInfoValues;
+  barbeiro: Barbeiro;
 }
 
 const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento, barbeiro }) => {
   const { push } = useRouter();
   const [editar, setEditar] = useState(false);
+  const [barberData, setBarberData] = useState<Barbeiro | null>(null);
+  const [address, setAddress] = useState<Address | null>(null);
+
+  useEffect(() => {
+    if (barbeiro) {
+      setBarberData(barbeiro);
+
+      // Buscar o endereço completo usando o ID
+      if (typeof barbeiro.address === "number") {
+        getAddressById(barbeiro.address.toString()).then(response => setAddress(response.data));
+      } else {
+        setAddress(barbeiro.address);
+      }
+    }
+  }, [barbeiro]);
 
   const { mutate } = useMutation(
-    async (values: BarberInfoValues) => {
-      return putBarbeiroById(values.id, values);
+    async (values: Barbeiro) => {
+      return putBarbeiroById(values.idBarber, values);
     }, {
       onSuccess: () => {
         push(APP_ROUTES.private.barbeiros.name);
@@ -52,20 +76,22 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
       }
     });
 
+  if (!barberData || !address) return null; // Exibe um loading ou algo do tipo enquanto os dados são carregados
+
   return (
     <>
-      <HeaderDetalhamento 
-        titulo="Barbeiros" 
-        diretorioAnterior="Gerenciar Barbeiros /" 
-        diretorioAtual={barbeiro.nome} 
+      <HeaderDetalhamento
+        titulo="Barbeiros"
+        diretorioAnterior="Gerenciar Barbeiros /"
+        diretorioAtual={barbeiro.name}
         hrefAnterior={backDetalhamento}
       />
       <div className={styles.container}>
         <Formik
-          initialValues={barbeiro}
+          initialValues={{ ...barberData, address }}
           enableReinitialize
           onSubmit={(values, { setSubmitting }) => {
-            mutate(values);
+            mutate({ ...values, address: Number(address.idAddress)});
             setSubmitting(false);
           }}
         >
@@ -76,8 +102,10 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   <p>Imagem de usuário</p>
                 </div>
                 <div className={styles.userInfo}>
-                  <h2>{values.nome}</h2>
-                  <p>{values.tipoServico}</p>
+                  <h2>{values.name}</h2>
+                  {values.services.map((service) => (
+                    <p key={service.id}>{service.name}</p>
+                  ))}
                 </div>
               </div>
 
@@ -87,19 +115,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Nome completo:"
-                  name="nome"
-                  value={values.nome}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  size="medium"
-                  error={undefined}
-                />
-                <BarberInput
-                  disabled={!editar}
-                  type="text"
-                  label="Telefone:"
-                  name="telefone"
-                  value={values.telefone}
+                  name="name"
+                  value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -136,8 +153,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="CEP:"
-                  name="cep"
-                  value={values.cep}
+                  name="address.cep"
+                  value={address.cep}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -147,8 +164,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Rua:"
-                  name="rua"
-                  value={values.rua}
+                  name="address.street"
+                  value={address.street}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -158,19 +175,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="number"
                   label="Número:"
-                  name="numero"
-                  value={values.numero}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  size="medium"
-                  error={undefined}
-                />
-                <BarberInput
-                  disabled={!editar}
-                  type="text"
-                  label="Complemento:"
-                  name="complemento"
-                  value={values.complemento}
+                  name="address.number"
+                  value={address.number}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -180,8 +186,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Bairro:"
-                  name="bairro"
-                  value={values.bairro}
+                  name="address.neighborhood"
+                  value={address.neighborhood}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -191,8 +197,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Cidade:"
-                  name="cidade"
-                  value={values.cidade}
+                  name="address.city"
+                  value={address.city}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -202,8 +208,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Estado:"
-                  name="estado"
-                  value={values.estado}
+                  name="address.state"
+                  value={address.state}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -218,8 +224,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="number"
                   label="Salário:"
-                  name="salario"
-                  value={values.salario}
+                  name="salary"
+                  value={values.salary}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -229,8 +235,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="date"
                   label="Data de Admissão:"
-                  name="dataAdmissao"
-                  value={values.dataAdmissao}
+                  name="admissionDate"
+                  value={values.admissionDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -240,8 +246,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="text"
                   label="Tipo de Serviço:"
-                  name="tipoServico"
-                  value={values.tipoServico}
+                  name="services"
+                  value={values.services.map((service) => service.name).join(", ")}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -251,8 +257,8 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   disabled={!editar}
                   type="number"
                   label="Carga Horária:"
-                  name="cargaHoraria"
-                  value={values.cargaHoraria}
+                  name="workload"
+                  value={values.workload}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="medium"
@@ -272,7 +278,7 @@ const BarberInfo: React.FC<BarberInfoProps> = ({ hrefAnterior, backDetalhamento,
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={styles.container__header_button}
+                    className={styles.saveButton}
                   >
                     Salvar
                   </button>
