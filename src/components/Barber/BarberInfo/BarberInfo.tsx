@@ -29,6 +29,7 @@ const BarberInfo: React.FC<BarberInfoProps> = ({
   const [editar, setEditar] = useState(false);
   const [barberData, setBarberData] = useState<Barbeiro | null>(null);
   const [address, setAddress] = useState<Address | null>(null);
+  const[showConsultas, setShowConsultas] = useState(false);
 
   useEffect(() => {
     if (barbeiro) {
@@ -70,25 +71,30 @@ const BarberInfo: React.FC<BarberInfoProps> = ({
           initialValues={{ ...barberData, address }}
           enableReinitialize
           onSubmit={(values, { setSubmitting }) => {
-            mutate({ ...values, address: Number(address?.idAddress)});
+            mutate({ ...values, address: Number(address?.idAddress) });
             setSubmitting(false);
           }}
         >
           {({ handleChange, handleBlur, values, isSubmitting }) => (
             <Form className={styles.form}>
-              <div className={styles.userProfile}>
-                <div className={styles.photo}>
-                  <p>Imagem de usuário</p>
+              <div className={styles.formHeader}>
+                <div className={styles.userProfile}>
+                  <div className={styles.photo}>
+                    <p>Imagem de usuário</p>
+                  </div>
+                  <div className={styles.userInfo}>
+                    <h2>{values.name}</h2>
+                    {values.services && values.services.length > 0 ? (
+                      values.services.map((service) => (
+                        <p key={service.id}>{service.name}</p>
+                      ))
+                    ) : (
+                      <p>Nenhum serviço disponível</p>
+                    )}
+                  </div>
                 </div>
-                <div className={styles.userInfo}>
-                  <h2>{values.name}</h2>
-                  {values.services && values.services.length > 0 ? (
-                    values.services.map((service) => (
-                      <p key={service.id}>{service.name}</p>
-                    ))
-                  ) : (
-                    <p>Nenhum serviço disponível</p>
-                  )}
+                <div className={styles.agendamento}>
+                  <button onClick={() => setShowConsultas(true)}>Atendimentos</button>
                 </div>
               </div>
 
