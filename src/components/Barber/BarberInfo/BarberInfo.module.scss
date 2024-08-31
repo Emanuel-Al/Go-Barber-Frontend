@@ -10,7 +10,7 @@
   flex-direction: column;
   justify-content: center;
   margin-bottom: 40px;
-  border: 1px solid gray;
+
 
   h2 {
     color: white;
@@ -96,8 +96,9 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  
-  button {
+}
+
+.btn {
     background-color: #FF9000;
     color: white;
     padding: 10px 20px;
@@ -113,7 +114,13 @@
       background-color: #999591;
     }
   }
-}
+
+  .buttons{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    gap: 25px;
+  }
 
 .formButton{
   display: flex;
