@@ -1,11 +1,105 @@
-import styles from "./DetalharAgendamento.module.scss"
+"use client";
 
-const index = () => {
-  return (
-    <div>
-        
-    </div>
-  )
+import { Form, Formik, FormikProps } from "formik";
+import { useEffect, useState } from "react";
+import style from "./DetalharAgendamento.module.scss";
+import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
+import DadosAgendamento from "../DadosAgendamento";
+import { useRouter } from "next/navigation";
+import { useMutation } from "react-query";
+import { putServicoById } from "@/api/servicos/putServicoById";
+import { APP_ROUTES } from "@/constants/app-routes";
+import { Agendamento } from "@/interfaces/Agendamento";
+
+interface DetalharAgendamentoProps {
+  hrefAnterior: string;
+  diretorioAtual: string;
+  dirAnt: string;
+  hrefAtual: string;
+  backDetalhamento: () => void;
+  agendamento: Agendamento;
 }
 
-export default index
+const DetalharAgendamento: React.FC<DetalharAgendamentoProps> = ({
+  hrefAtual,
+  backDetalhamento,
+  agendamento,
+}) => {
+  const { push } = useRouter();
+  const [editar, setEditar] = useState(false);
+
+  const [formData, setFormData] = useState({
+    id: agendamento.id,
+    name: agendamento.name || '',
+    date: agendamento.date || '',
+    price: agendamento.price || 0,
+    services: agendamento.services || [],
+  });
+
+  useEffect(() => {
+    if (agendamento) {
+      setFormData({
+        id: agendamento.id,
+        name: agendamento.name || '',
+        date: agendamento.date || '',
+        price: agendamento.price || 0,
+        services: agendamento.services || [],
+      });
+    }
+  }, [agendamento]);
+
+  const { mutate } = useMutation(
+    async (values: Agendamento) => {
+      return putServicoById(agendamento.id, values);
+    },
+    {
+      onSuccess: () => {
+        push(APP_ROUTES.private.agendamentos.name);
+      },
+      onError: (error) => {
+        console.log("Erro ao atualizar o agendamento", error);
+      },
+    }
+  );
+
+  return (
+    <div id="header" className={style.container}>
+      <HeaderDetalhamento
+        titulo="Agendamentos"
+        hrefAnterior={backDetalhamento}
+        diretorioAnterior="Home / Agendamentos / "
+        diretorioAtual="Informações do Agendamento"
+      />
+      <div className={style.container__ContainerForm}>
+        <Formik
+          initialValues={formData}
+          enableReinitialize
+          onSubmit={(values, { setSubmitting }) => {
+            mutate(values);
+            setSubmitting(false);
+          }}
+        >
+          {(formik: FormikProps<Agendamento>) => (
+            <Form className={style.container__ContainerForm_form}>
+              <div className={style.container__header}>
+                <div className={style.container__header_title}>
+                  <h1>Informações do Agendamento</h1>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditar(!editar)}
+                  className={style.container__header_button}
+                >
+                  <span>{editar ? 'Salvar' : 'Editar'}</span>
+                </button>
+              </div>
+              <DadosAgendamento formik={formik} editar={editar} hrefAnterior={hrefAtual} />
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
+  );
+};
+
+export default DetalharAgendamento;

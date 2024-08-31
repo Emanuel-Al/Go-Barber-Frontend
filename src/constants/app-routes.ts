@@ -29,6 +29,9 @@ export const APP_ROUTES = {
         },
         unauthorized: {
             name: "/unauthorized"
+        },
+        agendamentos: {
+            name: "/agendamentos"
         }
     },
     public: {
