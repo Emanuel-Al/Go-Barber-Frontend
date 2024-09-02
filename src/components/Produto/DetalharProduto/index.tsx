@@ -10,6 +10,8 @@ import { putProdutoById } from "@/api/produtos/putProdutoById";
 import DadosProduto from "./DadosProduto";
 import { APP_ROUTES } from "@/constants/app-routes";
 import NovoEstoque from "../NovoEstoque";
+import { Produto } from "@/interfaces/produtoInterface";
+import { Estoque } from "@/interfaces/estoqueInterface";
 
 interface DetalharProdutoProps {
   hrefAnterior: string;
@@ -21,22 +23,6 @@ interface DetalharProdutoProps {
   onNovoEstoque: () => void;  // Adicionando a prop para lidar com o botão Novo Estoque
 }
 
-interface Produto {
-  idProduct: string;
-  nameProduct: string;
-  brandProduct: string;
-  priceProduct: string;
-  size: string;
-  descriptionProduct: string;
-}
-interface Estoque {
-  idStock: string;
-  idProduct: string;
-  quantity: number;
-  batchNumber: string;
-  expirationDate: string;
-  acquisitionDate: string;
-}
 const DetalharProduto: React.FC<DetalharProdutoProps> = ({
   hrefAnterior,
   backDetalhamento,

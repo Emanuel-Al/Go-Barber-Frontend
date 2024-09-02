@@ -5,15 +5,8 @@ import Table from "./Table";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
 import { getAllEstoqueByProductId } from "@/api/estoque/getAllEstoqueByProductId";
+import { Estoque } from "@/interfaces/estoqueInterface";
 
-interface Estoque {
-  idStock: string;
-  idProduct: string;
-  quantity: number;
-  batchNumber: string;
-  expirationDate: string;
-  acquisitionDate: string;
-}
 
 interface ListaEstoqueProps {
   onSelectEstoque: (estoque: Estoque) => void;

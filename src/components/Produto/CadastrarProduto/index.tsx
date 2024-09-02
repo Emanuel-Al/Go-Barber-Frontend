@@ -10,24 +10,8 @@ import { useRouter } from "next/navigation";
 import DadosEstoque from "./dadosEstoque/index";
 import { postProduto } from "@/api/produtos/postProduto";
 import { postEstoque } from "@/api/estoque/postEstoque";
-
-interface Produto {
-  idProduct: string;
-  nameProduct: string;
-  brandProduct: string;
-  priceProduct: string;
-  size: string;
-  descriptionProduct: string;
-}
-
-interface Estoque {
-  id: string;
-  idProduct: string;
-  quantity: number;
-  batchNumber: string;
-  expirationDate: string;
-  acquisitionDate: string;
-}
+import { Produto } from "@/interfaces/produtoInterface";
+import { Estoque } from "@/interfaces/estoqueInterface";
 
 interface FormValues {
   produto: Produto;
@@ -47,7 +31,7 @@ const CadastrarProduto = () => {
       descriptionProduct: "",
     },
     estoque: {
-      id: "",
+      idStock: "",
       idProduct: "",
       quantity: 0,
       batchNumber: "",
@@ -72,7 +56,6 @@ const CadastrarProduto = () => {
 
   const mutateStock = useMutation(
     async (estoqueData: Estoque) => {
-      console.log("Stock Data:", estoqueData);
       return postEstoque(estoqueData);
     },
     {
@@ -87,7 +70,6 @@ const CadastrarProduto = () => {
 
   const mutateProduto = useMutation(
     async (produtoData: FormValues) => {
-      console.log("Product Data:", produtoData.produto);
       return postProduto(produtoData.produto);
     },
     {
@@ -96,7 +78,6 @@ const CadastrarProduto = () => {
           ...formikValues.estoque, // Use the updated Formik values
           idProduct: produtoResponse.data.idProduct, // Ensure the product ID is passed to the stock data
         };
-        console.log(estoqueData);
         mutateStock.mutate(estoqueData); // Pass the modified stock data to mutateStock
       },
       onError: (error) => {
@@ -132,7 +113,6 @@ const CadastrarProduto = () => {
             initialValues={initialValues}
             validationSchema={validateSchema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log("Entrou!", values);
               mutateProduto.mutate(values); // Pass entire Formik values to mutateProduto
               setSubmitting(false);
             }}

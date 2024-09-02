@@ -114,7 +114,7 @@ const BarbeiroComponent = () => {
           </div>
           <div className={style.header__container_botoes}>
             <button
-              onClick={() => push(APP_ROUTES.private.barbeiros_cadastro.name)}
+              //onClick={() => push(APP_ROUTES.private.barbeiros_cadastro.name)}
             >
               <h1>Adicionar Barbeiro</h1>
               <img src="/assets/icons/navalha.svg" alt="Navalha" />

@@ -7,15 +7,8 @@ import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
 import DetalhamentoPromocao from "../DetalharPromocao";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
+import { Promocao } from "@/interfaces/promocaoInterface";
 
-interface Promocao {
-  id: string;
-  name: string;
-  totalPrice: string;
-  startDate: string;
-  endDate: string;
-  coupon: string;
-}
 
 const ListaPromocoes = () => {
   const [promocoes, setPromocoes] = useState<Promocao[]>([]);

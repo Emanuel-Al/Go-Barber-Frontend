@@ -6,6 +6,9 @@ export const APP_ROUTES = {
         barbeiros: {
             name: "/barbeiros"
         },
+        meu_perfil: {
+            name: "/barbeiros/meu-perfil"
+        },
         cadastrar_barbeiro:{
             name: "/barbeiros/cadastrar-barbeiro"
         },

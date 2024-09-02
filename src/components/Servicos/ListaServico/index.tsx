@@ -2,19 +2,14 @@ import { useEffect, useState } from "react";
 import style from "./servicos.module.scss";
 import { useMutation } from "react-query";
 import Table from "./Table";
-import { getAllServico } from "@/api/servicos/getAllServicos"; 
+import { getAllServicos } from "@/api/servicos/getAllServicos"; 
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
 import DetalharServico from "../DetalharServico";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
+import { Servico } from "@/interfaces/servicoInterface";
 
-interface Servico {
-  id: string;
-  name: string;
-  description: string;
-  value: string;
-  time: string;
-}
+
 
 const ServicoComponent = () => {
   const [servicos, setServicos] = useState<Servico[]>([]);
@@ -24,7 +19,7 @@ const ServicoComponent = () => {
   const [totalPages, setTotalPages] = useState(0);
   const { push } = useRouter();
 
-  const { mutate } = useMutation(() => getAllServico(currentPage, 3), {
+  const { mutate } = useMutation(() => getAllServicos(currentPage, 3), {
     onSuccess: (res) => {
       setServicos(res.data.content);
       setTotalPages(res.data.totalPages);

@@ -10,8 +10,8 @@ import { setUserLogin } from "@/redux/userLogin/userLoginSlice";
 import { RootState } from "@/redux/store";
 
 interface HeaderMenuProps {
-    name: string;
-    photo: string;
+    name?: string;  
+    photo: any;
 }
 const Header_menu : React.FC<HeaderMenuProps> = ({ name, photo  }) => {
     const { push } = useRouter();

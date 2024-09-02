@@ -7,15 +7,9 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import DadosEstoque from "./dadosEstoque/index";
 import { postEstoque } from "@/api/estoque/postEstoque";
+import { Estoque } from "@/interfaces/estoqueInterface";
 
-interface Estoque {
-  id: string;
-  idProduct: string;
-  quantity: number;
-  batchNumber: string;
-  expirationDate: string;
-  acquisitionDate: string;
-}
+
 
 interface NovoEstoqueProps {
   productId: string; // Prop para receber o ID do produto
@@ -26,7 +20,7 @@ const NovoEstoque: React.FC<NovoEstoqueProps> = ({ productId, onCancel }) => {
   const { push } = useRouter();
 
   const initialValues = {
-    id: "",
+    idStock: "",
     idProduct: productId, // Preencher automaticamente com o ID do produto
     quantity: 0,
     batchNumber: "",

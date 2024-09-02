@@ -8,21 +8,16 @@ import * as Yup from 'yup';
 import { postPromocao } from "@/api/promocoes/postPromocao";
 import { APP_ROUTES } from "@/constants/app-routes";
 import { useRouter } from "next/navigation";
+import { Promocao } from "@/interfaces/promocaoInterface";
 
 
-interface Promocao {
-  name: string;
-  totalPrice: string;
-  startDate: string;
-  endDate: string;
-  coupon: string | null;  
-}
 
 
 const CadastroPromocao = () => {
   const { push } = useRouter();
 
   const initialValues: Promocao = {
+    id: "",
     name: "",
     totalPrice: "",
     startDate: "",

@@ -10,15 +10,8 @@ import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
 import DetalharProduto from "../DetalharProduto";
 import NovoEstoque from "../NovoEstoque"; // Importando o componente NovoEstoque
 import { getAllProdutos } from "@/api/produtos/getAllProdutos";
+import { Produto } from "@/interfaces/produtoInterface";
 
-interface Produto {
-  idProduct: string;
-  nameProduct: string;
-  brandProduct: string;
-  priceProduct: string;
-  size: string;
-  descriptionProduct: string;
-}
 
 const ListaProdutos = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);

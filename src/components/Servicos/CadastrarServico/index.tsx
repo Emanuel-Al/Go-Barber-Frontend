@@ -8,18 +8,15 @@ import * as Yup from 'yup';
 import { postServico } from "@/api/servicos/postServico";
 import { APP_ROUTES } from "@/constants/app-routes";
 import { useRouter } from "next/navigation";
+import { Servico } from "@/interfaces/servicoInterface";
 
-interface Servico {
-  name: string;
-  description: string;
-  value: number; 
-  time: number;   
-}
+
 
 const CadastroServico = () => {
   const { push } = useRouter();
 
   const initialValues: Servico = {
+    id: "",
     name: "",
     description: "",
     value: 0,    

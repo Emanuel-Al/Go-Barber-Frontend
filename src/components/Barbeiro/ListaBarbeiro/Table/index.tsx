@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import ConfirmationPromocaoModal from "../ExcluirPromocao";
 import { deleteBarber } from "@/api/barbeiro/deleteBarber";
-import { Barbeiro } from "@/interfaces/Barbeiro";
+import { Barbeiro } from "@/interfaces/barbeiroInterface";
 
 interface TableProps {
   table1: string;
@@ -17,8 +17,6 @@ interface TableProps {
   totalPages: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
-
-
 const Table: React.FC<TableProps> = ({ 
   listBarbeiros,  
   onSelectBarbeiro, 

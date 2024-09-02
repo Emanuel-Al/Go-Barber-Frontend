@@ -7,14 +7,12 @@ import { useEffect, useState } from "react";
 import style from "./detalhar-promocao.module.scss";
 
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
-import DadosPromocao from "./DadosEstoque";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
-import { putPromocaoById } from "@/api/promocoes/putPromocaoById";
 import { APP_ROUTES } from "@/constants/app-routes";
-import ListaEstoque from "../ListaEstoque";
 import DadosEstoque from "./DadosEstoque";
 import { putEstoqueById } from "@/api/estoque/putEstoqueById";
+import { Estoque } from "@/interfaces/estoqueInterface";
 
 interface DetalharEstoqueProps {
     hrefAnterior: string;
@@ -24,14 +22,7 @@ interface DetalharEstoqueProps {
     backDetalhamento: () => void;
     estoque: Estoque;
 }
-interface Estoque {
-  idStock: string;
-  idProduct: string;
-  quantity: number;
-  batchNumber: string;
-  expirationDate: string;
-  acquisitionDate: string;
-}
+
 
   const DetalharEstoque : React.FC<DetalharEstoqueProps> = ({ hrefAnterior, backDetalhamento, estoque }) => {
 

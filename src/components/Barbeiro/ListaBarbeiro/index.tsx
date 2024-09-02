@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/app-routes";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
 import { getAllBarbers } from "@/api/barbeiro/getAllBarbers";
-import BarberInfo from "@/components/Barber/BarberInfo/BarberInfo";
-import { Barbeiro } from "@/interfaces/Barbeiro";
+import DetalharBarbeiro from "../DetalharBarbeiro";
+import { Barbeiro } from '@/interfaces/barbeiroInterface'; 
 
 const ListaBarbeiros = () => {
   const [barbeiros, setBarbeiros] = useState<Barbeiro[]>([]);
@@ -45,13 +45,10 @@ const ListaBarbeiros = () => {
   };
 
   if (selectedBarbeiro) {
-    return <BarberInfo
-      diretorioAtual="dirAtual"
+    return <DetalharBarbeiro
       barbeiro={selectedBarbeiro}
       backDetalhamento={handleBackToList}
-      dirAnt="dirAnt"
       hrefAnterior={APP_ROUTES.private.home.name}
-      hrefAtual={APP_ROUTES.private.promocoes.name}
     />
   }
 

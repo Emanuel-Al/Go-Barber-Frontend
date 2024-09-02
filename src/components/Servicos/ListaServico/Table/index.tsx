@@ -4,6 +4,7 @@ import { useState } from "react";
 import style from "./table.module.scss";
 import { deleteServico } from "@/api/servicos/deleteServico";
 import ConfirmationModal from "../ExcluirServico";
+import { Servico } from "@/interfaces/servicoInterface";
 
 interface TableProps {
   table1: string;
@@ -19,13 +20,7 @@ interface TableProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-interface Servico {
-  id: string;
-  name: string;
-  description: string;
-  value: string;
-  time: string;
-}
+
 
 const Table: React.FC<TableProps> = ({
   listServicos,

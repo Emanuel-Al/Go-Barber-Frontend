@@ -4,15 +4,27 @@ import styles from "./BarberInfo.module.scss";
 import HeaderDetalhamento from "@/components/Header/HeaderDetalhamento";
 import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
-import { putBarbeiroById } from "@/api/barbeiro/putBarbeiroById";
-import { getAddressById } from "@/api/endereco/getAddressById";
 import BarberInput from "../BarberInput";
-import { Barbeiro } from "@/interfaces/Barbeiro";
-import { Address } from "@/interfaces/Address";
-import AgendamentoTable from "../BarberHistoricoAgendamento/Table/Table";
-import { mockAgendamentos } from "../BarberHistoricoAgendamento/TableMock";
-import { Agendamento } from "@/interfaces/Agendamento";
-import DetalharAgendamento from "../BarberHistoricoAgendamento/DetalharAgendamento";
+import { putBarberbeiroById } from "@/api/barbeiro/putBarbeiroById";
+
+interface BarberInfoValues {
+  id: string;
+  nome: string;
+  telefone: string;
+  email: string;
+  cpf: string;
+  cep: string;
+  rua: string;
+  numero: number;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  salario: number;
+  dataAdmissao: string;
+  tipoServico: string;
+  cargaHoraria: number;
+}
 
 interface BarberInfoProps {
   hrefAnterior: string;
@@ -53,13 +65,9 @@ const BarberInfo: React.FC<BarberInfoProps> = ({
   }, [barbeiro]);
 
   const { mutate } = useMutation(
-    async (values: Barbeiro) => {
-      if (!values.idBarber) {
-        throw new Error("ID do barbeiro não está definido.");
-      }
-      return putBarbeiroById(values.idBarber, values);
-    },
-    {
+    async (values: BarberInfoValues) => {
+      //return putBarberbeiroById(values.id, values);
+    }, {
       onSuccess: () => {
         setEditar(false);
       },

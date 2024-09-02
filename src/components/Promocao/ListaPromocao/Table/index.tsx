@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { postNotificarPromocao } from "@/api/promocoes/postNotificarPromocao";
 import { deletePromocao } from "@/api/promocoes/deletePromocao";
 import ConfirmationPromocaoModal from "../ExcluirPromocao";
+import { Promocao } from "@/interfaces/promocaoInterface";
 
 interface TableProps {
   table1: string;
@@ -20,14 +21,7 @@ interface TableProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-interface Promocao {
-  id: string;
-  name: string;
-  totalPrice: string;
-  startDate: string;
-  endDate: string;
-  coupon: string;
-}
+
 
 const Table: React.FC<TableProps> = ({ 
   listPromocoes,  

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import { putServicoById } from "@/api/servicos/putServicoById"; 
 import { APP_ROUTES } from "@/constants/app-routes";
+import { Servico } from "@/interfaces/servicoInterface";
 
 interface DetalharServicoProps {
     hrefAnterior: string;
@@ -19,13 +20,7 @@ interface DetalharServicoProps {
     servico: Servico;
 }
 
-interface Servico {
-    id: string;
-    name: string;
-    description: string; 
-    value: string; 
-    time: string; 
-}
+
 
 const DetalharServico: React.FC<DetalharServicoProps> = ({
     hrefAnterior,
@@ -42,8 +37,8 @@ const DetalharServico: React.FC<DetalharServicoProps> = ({
         id: servico.id,
         name:  '',
         description: '', 
-        value: '', 
-        time: '', 
+        value: 0, 
+        time: 0, 
     });
 
     useEffect(() => {
@@ -52,8 +47,8 @@ const DetalharServico: React.FC<DetalharServicoProps> = ({
                 id: servico.id,
                 name: servico.name || '',
                 description: servico.description || '', 
-                value: servico.value || '', 
-                time: servico.time || '', 
+                value: servico.value || 0, 
+                time: servico.time || 0, 
             });
         }
     }, [servico]);

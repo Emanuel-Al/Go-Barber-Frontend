@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "react-query";
 import { putPromocaoById } from "@/api/promocoes/putPromocaoById";
 import { APP_ROUTES } from "@/constants/app-routes";
+import { Promocao } from "@/interfaces/promocaoInterface";
 
 interface DetalharPromocaoProps {
     hrefAnterior: string;
@@ -21,14 +22,7 @@ interface DetalharPromocaoProps {
     backDetalhamento: () => void;
     promocao: Promocao;
 }
-interface Promocao {
-    id: string;
-    name: string;
-    totalPrice: string;
-    startDate: string;
-    endDate: string;
-    coupon: string;
-  }
+
 
   const DetalharPromocao : React.FC<DetalharPromocaoProps> = ({ hrefAnterior, backDetalhamento, promocao }) => {
 
